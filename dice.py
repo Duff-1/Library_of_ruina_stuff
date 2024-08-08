@@ -42,14 +42,14 @@ class dice:
         
         self.min = min
         self.max = max
-        self.bonus = bonus        
+        self.bonus = bonus
         self.dicetype = dicetype
         self.base = None
         self.mod = None
         
     def roll(self):
         base = random.randint(self.min, self.max)
-        mod = self.bonus + base
+        mod = self.bonus + base if bonus != None else base
         
         return base, mod, self.dicetype
 
