@@ -28,6 +28,7 @@ pygame.display.set_caption('Game')
 
 class datastore:
     timer = 0
+    last_values = ('none','{none}')
 
 class button: # Interactive buttons on the menus
 
@@ -39,15 +40,22 @@ class button: # Interactive buttons on the menus
         self.hitbox = pygame.Rect(pos, [self.w, self.h]) # Hitbox for the button
         self.func = dice.main
         self.path = path.removesuffix(".txt")
+        self.rolls = ''
 
     def update(self):
+        rolled = False
         if self.hitbox.collidepoint(pygame.mouse.get_pos()):
             b1, b2, b3 = pygame.mouse.get_pressed()
             if b1 and datastore.timer <= 0:
-                self.func(self.path)
+                print(f'\n\n {self.text} \n\n')
+                self.rolls = self.func(self.path)
+                print(self.rolls)
+                rolled = True
                 datastore.timer = 120
-                print(datastore.timer)
+                datastore.last_values = (self.text, self.rolls)
         datastore.timer = datastore.timer-1
+                
+        
 
     def display(self): # Displays a button
         x, y = self.pos
@@ -103,6 +111,7 @@ def main():
 
         for but in buttons:
             but.display()
+            
 
         pygame.display.update()
         fpsClock.tick(FPS)

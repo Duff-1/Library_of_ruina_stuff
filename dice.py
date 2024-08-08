@@ -49,7 +49,7 @@ class dice:
         
     def roll(self):
         base = random.randint(self.min, self.max)
-        mod = self.bonus + base if bonus != None else base
+        mod = self.bonus + base
         
         return base, mod, self.dicetype
 
@@ -96,6 +96,8 @@ def checkbonus(dtype):
             return modifiers.evade
         case 'block':
             return modifiers.block
+        case _:
+            return 0
 
 def main(pname=None):
     if pname == None:
