@@ -1,4 +1,4 @@
-import glob, pygame
+import glob, pygame, dice, sys
 from pygame.locals import *
 pygame.init()
 pygame.font.init()
@@ -7,7 +7,6 @@ pages = []
 
 for filepath in glob.iglob('pages/*.txt'):
     pages.append(filepath)
-
 
 
 # Aspects
@@ -27,6 +26,9 @@ WINDOW_WIDTH = 400
 WINDOW = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption('Game')
 
+class datastore:
+    timer = 0
+
 class button: # Interactive buttons on the menus
 
     def __init__(self, pos, text, path): # Creates a button
@@ -35,7 +37,18 @@ class button: # Interactive buttons on the menus
         self.text_render = FONT.render(self.text, 1, BLACK) # Render for the text
         x, y, self.w , self.h = self.text_render.get_rect() # Size of the button
         self.hitbox = pygame.Rect(pos, [self.w, self.h]) # Hitbox for the button
-    
+        self.func = dice.main
+        self.path = path.removesuffix(".txt")
+
+    def update(self):
+        if self.hitbox.collidepoint(pygame.mouse.get_pos()):
+            b1, b2, b3 = pygame.mouse.get_pressed()
+            if b1 and datastore.timer <= 0:
+                self.func(self.path)
+                datastore.timer = 120
+                print(datastore.timer)
+        datastore.timer = datastore.timer-1
+
     def display(self): # Displays a button
         x, y = self.pos
         w = self.w
@@ -46,12 +59,14 @@ class button: # Interactive buttons on the menus
         pygame.draw.line(WINDOW, (50, 50, 50), (x + w , y+h), [x + w , y], 5)
         if self.hitbox.collidepoint(pygame.mouse.get_pos()): # Button has different responses when touching mouse
             if pygame.mouse.get_pressed()[0] == True: # On click
-            pygame.draw.rect(WINDOW, (50, 50, 50), (x, y, w , h))
+                pygame.draw.rect(WINDOW, (50, 50, 50), (x, y, w , h))
             else: # On hover
-            pygame.draw.rect(WINDOW, (150, 150, 150), (x, y, w , h))
+                pygame.draw.rect(WINDOW, (150, 150, 150), (x, y, w , h))
         else: # When not touching mouse
             pygame.draw.rect(WINDOW, (100, 100, 100), (x, y, w , h))
+        self.update()
         return WINDOW.blit(self.text_render, (x, y))
+        
 
 def text_blit(words, colour, x, y):
     text = FONT.render(words, True, colour)
@@ -69,6 +84,7 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
+                sys.exit()
 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 pass
@@ -84,9 +100,10 @@ def main():
             temp = page.removeprefix("pages\ ".removesuffix(" "))
             temp = temp.removesuffix(".txt")
             buttons.append(button((100, (25*i + 10) - scroll_value),temp,page))
-            text_blit(temp,(0,0,0), 100, (25*i + 10) - scroll_value)
 
-        
+        for but in buttons:
+            but.display()
+
         pygame.display.update()
         fpsClock.tick(FPS)
         buttons = []

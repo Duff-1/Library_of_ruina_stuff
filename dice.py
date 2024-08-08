@@ -97,20 +97,18 @@ def checkbonus(dtype):
         case 'block':
             return modifiers.block
 
-def main():
-    temp = input('page name: ')
-    ch = input('change modifiers? (y/n)')
-    if ch == 'y':
-        modifiers.slash = int(input('slash'))
-        modifiers.pierce = int(input('pierce'))
-        modifiers.blunt = int(input('blunt'))
-        modifiers.evade = int(input('evade'))
-        modifiers.block = int(input('block'))
+def main(pname=None):
+    if pname == None:
+        temp = input('page name: ')
+        print(f'slash {modifiers.slash}, blunt {modifiers.blunt}, pierce {modifiers.pierce}, evade {modifiers.evade}, block {modifiers.block}\n')
+
+        current_card = card(temp)
+        rolls = current_card.rollpage()
     else:
         print(f'slash {modifiers.slash}, blunt {modifiers.blunt}, pierce {modifiers.pierce}, evade {modifiers.evade}, block {modifiers.block}\n')
 
-    current_card = card(temp)
-    rolls = current_card.rollpage()
+        current_card = card(pname)
+        rolls = current_card.rollpage()
     return rolls
 
 
