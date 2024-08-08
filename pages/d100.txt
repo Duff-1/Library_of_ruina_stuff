@@ -1,4 +1,4 @@
 1
 100
-slash
+none
 eod

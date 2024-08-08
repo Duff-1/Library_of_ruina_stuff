@@ -1,0 +1,12 @@
+3
+6
+block
+eod
+2
+7
+slash
+eod
+2
+5
+blunt
+eod
